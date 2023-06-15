@@ -1,14 +1,15 @@
 import pandas as pd
-from sklearn.linear_model import LogisticRegression
 from imblearn.over_sampling import RandomOverSampler
 from sklearn.metrics import accuracy_score
+from sklearn.ensemble import RandomForestClassifier
 
 
-class LogisticRegressionModel:
+class RandomForestModel:
 
     def __init__(self):
         # create log reg model
-        self.classifier = LogisticRegression(solver='lbfgs', random_state=1)
+        self.classifier = RandomForestClassifier(n_estimators=100, random_state=42)
+
         # implement random oversampling
         self.ros = RandomOverSampler(random_state=1)
 

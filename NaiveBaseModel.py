@@ -1,14 +1,16 @@
 import pandas as pd
-from sklearn.linear_model import LogisticRegression
 from imblearn.over_sampling import RandomOverSampler
 from sklearn.metrics import accuracy_score
+from sklearn.naive_bayes import GaussianNB
+from sklearn.model_selection import train_test_split
 
 
-class LogisticRegressionModel:
+class NaiveBaseModel:
 
     def __init__(self):
         # create log reg model
-        self.classifier = LogisticRegression(solver='lbfgs', random_state=1)
+        self.classifier = GaussianNB()
+
         # implement random oversampling
         self.ros = RandomOverSampler(random_state=1)
 
