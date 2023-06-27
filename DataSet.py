@@ -4,14 +4,17 @@ import nltk
 import pandas as pd
 
 from nltk.corpus import stopwords
+
 nltk.download('stopwords')
 
 from nltk.stem import WordNetLemmatizer
+
 lemmatizer = WordNetLemmatizer()
 nltk.download('wordnet')
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
+
 
 class DataSet:
 
@@ -19,7 +22,7 @@ class DataSet:
         self.mbti_df = pd.read_csv('mbti_1.csv')
 
     def handle_data(self):
-        self.mbti_df["posts"] = self.mbti_df["posts"].str.lower()       #converts text in posts to lowercase as it is preferred in nlp
+        self.mbti_df["posts"] = self.mbti_df["posts"].str.lower()
         for i in range(len(self.mbti_df)):
             post_temp = self.mbti_df._get_value(i, 'posts')
             pattern = re.compile(
@@ -38,27 +41,23 @@ class DataSet:
             self.mbti_df._set_value(i, 'posts', post_temp)
 
         for i in range(len(self.mbti_df)):
-            post_temp=self.mbti_df._get_value(i, 'posts')
-            pattern = re.compile('\s+')                                     #to match multiple whitespaces
-            post_temp= re.sub(pattern, ' ', post_temp)                      #to replace them with single whitespace
+            post_temp = self.mbti_df._get_value(i, 'posts')
+            pattern = re.compile('\s+')  # to match multiple whitespaces
+            post_temp = re.sub(pattern, ' ', post_temp)  # to replace them with single whitespace
             self.mbti_df._set_value(i, 'posts', post_temp)
 
         remove_words = stopwords.words("english")
         for i in range(self.mbti_df.shape[0]):
-            post_temp=self.mbti_df._get_value(i, 'posts')
-            post_temp=" ".join([w for w in post_temp.split(' ') if w not in remove_words])    #to remove stopwords
+            post_temp = self.mbti_df._get_value(i, 'posts')
+            post_temp = " ".join([w for w in post_temp.split(' ') if w not in remove_words])  # to remove stopwords
             self.mbti_df._set_value(i, 'posts', post_temp)
 
         for i in range(self.mbti_df.shape[0]):
-            post_temp=self.mbti_df._get_value(i, 'posts')
-            post_temp=" ".join([lemmatizer.lemmatize(w) for w in post_temp.split(' ')])   #to implement lemmetization i.e. to group together different forms of a word
+            post_temp = self.mbti_df._get_value(i, 'posts')
+            post_temp = " ".join([lemmatizer.lemmatize(w) for w in post_temp.split(' ')])  # to implement lemmetization. group together different forms of a word
             self.mbti_df._set_value(i, 'posts', post_temp)
 
-
-        # Examine the correlation between personality types codes
-        # Split type columns into four binary columns
         split_df = self.mbti_df[['type', 'posts']].copy()
-
 
         split_df['E-I'] = split_df['type'].str.extract('(.)[N,S]', 1)
         split_df['N-S'] = split_df['type'].str.extract('[E,I](.)[F,T]', 1)
@@ -85,7 +84,7 @@ class DataSet:
             max_features=17000,
             min_df=7,
             max_df=0.8,
-            ngram_range=(1,3),
+            ngram_range=(1, 3),
         )
 
         # create vectors for X
