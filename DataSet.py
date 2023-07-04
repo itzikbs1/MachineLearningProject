@@ -34,7 +34,7 @@ class DataSet:
             post_temp = self.mbti_df._get_value(i, 'posts')
             pattern = re.compile(r'[0-9]')  # to match numbers from 0 to 9
             post_temp = re.sub(pattern, ' ', post_temp)  # to replace them with space
-            pattern = re.compile('\W+')  # to match alphanumeric characters
+            pattern = re.compile('\W+')  # to match non alphanumeric characters
             post_temp = re.sub(pattern, ' ', post_temp)  # to replace them with space
             pattern = re.compile(r'[_+]')
             post_temp = re.sub(pattern, ' ', post_temp)
@@ -57,27 +57,28 @@ class DataSet:
             post_temp = " ".join([lemmatizer.lemmatize(w) for w in post_temp.split(' ')])  # to implement lemmetization. group together different forms of a word
             self.mbti_df._set_value(i, 'posts', post_temp)
 
-        split_df = self.mbti_df[['type', 'posts']].copy()
+        copy = self.mbti_df[['type', 'posts']].copy()
 
-        split_df['E-I'] = split_df['type'].str.extract('(.)[N,S]', 1)
-        split_df['N-S'] = split_df['type'].str.extract('[E,I](.)[F,T]', 1)
-        split_df['T-F'] = split_df['type'].str.extract('[N,S](.)[J,P]', 1)
-        split_df['J-P'] = split_df['type'].str.extract('[F,T](.)', 1)
+        copy['E-I'] = copy['type'].str.extract('(.)[N,S]', 1)
+        copy['N-S'] = copy['type'].str.extract('[E,I](.)[F,T]', 1)
+        copy['T-F'] = copy['type'].str.extract('[N,S](.)[J,P]', 1)
+        copy['J-P'] = copy['type'].str.extract('[F,T](.)', 1)
 
         # Encode letters to numeric values
         le = LabelEncoder()
-        encoded_df = split_df[['type', 'posts']].copy()
-        encoded_df['E0-I1'] = le.fit_transform(split_df['E-I'])
-        encoded_df['N0-S1'] = le.fit_transform(split_df['N-S'])
-        encoded_df['F0-T1'] = le.fit_transform(split_df['T-F'])
-        encoded_df['J0-P1'] = le.fit_transform(split_df['J-P'])
+        labeled_data = copy[['type', 'posts']].copy()
+        labeled_data['E0-I1'] = le.fit_transform(copy['E-I'])
+        labeled_data['N0-S1'] = le.fit_transform(copy['N-S'])
+        labeled_data['F0-T1'] = le.fit_transform(copy['T-F'])
+        labeled_data['J0-P1'] = le.fit_transform(copy['J-P'])
 
         # Define X and y
-        X = encoded_df["posts"].values
-        y_all = encoded_df.drop(columns=['type', 'posts'])
+        X = labeled_data["posts"].values
+        Y = labeled_data.drop(columns=['type', 'posts'])
 
         # Split training and testing dataset
-        X_train, X_test, y_all_train, y_all_test = train_test_split(X, y_all, random_state=42)
+        X_train, X_test, y_train, y_test = train_test_split(X, Y, random_state=42) # X_train and X_test will be all the posts divided to
+        # train and test. y_all_train and y_all_test will be the target labels i.e the MBTI type letters divided to the train and test. 25% goes to test. 75% to train.
 
         # Define TFIDF verctorizer
         vectorizer = TfidfVectorizer(
@@ -87,7 +88,7 @@ class DataSet:
             ngram_range=(1, 3),
         )
 
-        # create vectors for X
+        # create vectors for X. We need to vectorize all the text for the ML models.
         X_train = vectorizer.fit_transform(X_train)
         X_test = vectorizer.transform(X_test)
-        return X_train, X_test, y_all_train, y_all_test, vectorizer
+        return X_train, X_test, y_train, y_test, vectorizer
