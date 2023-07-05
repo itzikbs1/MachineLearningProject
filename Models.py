@@ -2,12 +2,20 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from imblearn.over_sampling import RandomOverSampler
 from sklearn.metrics import accuracy_score
+from sklearn.decomposition import PCA
+from sklearn.svm import SVC
+from sklearn.pipeline import Pipeline
 
 
 class Models:
 
     def __init__(self, classifier):
         self.classifier = classifier  # create the classifier for each class
+    # def __init__(self):
+    #     self.classifier = Pipeline([
+    #         ('pca', PCA(n_components=20)),  # Add PCA to the pipeline
+    #         ('svm', SVC())  # SVM classifier
+    #     ])
 
     def EIModel(self, X_train, X_test, y_all_train, y_all_test):
         # split the data for E-I

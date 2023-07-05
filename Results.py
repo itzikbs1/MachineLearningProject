@@ -1,14 +1,18 @@
 import numpy as np
+from sklearn.decomposition import PCA
 from matplotlib import pyplot as plt
+from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from Models import Models
 from DataSet import DataSet
 import time
+import pandas as pd
 
 if __name__ == '__main__':
     lrm = Models(LogisticRegression(solver='lbfgs', random_state=1))
@@ -16,7 +20,8 @@ if __name__ == '__main__':
     svm = Models(SVC())
     nbm = Models(MultinomialNB())
     ada = Models(AdaBoostClassifier(n_estimators=50, random_state=42))
-    knn = Models(KNeighborsClassifier(n_neighbors=82))  # 82 neighbors gave the best results after checking 100 neighbors
+    knn = Models(
+        KNeighborsClassifier(n_neighbors=82))  # 82 neighbors gave the best results after checking 100 neighbors
 
     dataset = DataSet()
     X_train, X_test, y_train, y_test, vectorizer = dataset.handle_data()
@@ -46,10 +51,21 @@ if __name__ == '__main__':
     print(f"Time for Random Forest model:{end_rfm - start_rfm}")
 
     start_svm = time.time()
-    ei_svm = svm.EIModel(X_train, X_test, y_train, y_test)
-    ns_svm = svm.NSModel(X_train, X_test, y_train, y_test)
-    ft_svm = svm.FTModel(X_train, X_test, y_train, y_test)
-    jp_svm = svm.JPModel(X_train, X_test, y_train, y_test)
+    # Create your classification models and train them using the PCA-transformed data
+    pca = PCA(n_components=20)  # Specify the desired number of components
+    X_svm_train = X_train.toarray()
+    X__svm_test = X_test.toarray()
+    X_train_pca = pca.fit_transform(X_svm_train)
+    X_test_pca = pca.transform(X__svm_test)
+
+    ei_svm = svm.EIModel(X_train_pca, X_test_pca, y_train, y_test)
+    ns_svm = svm.NSModel(X_train_pca, X_test_pca, y_train, y_test)
+    ft_svm = svm.FTModel(X_train_pca, X_test_pca, y_train, y_test)
+    jp_svm = svm.JPModel(X_train_pca, X_test_pca, y_train, y_test)
+    # ei_svm = svm.EIModel(X_train, X_test, y_train, y_test)
+    # ns_svm = svm.NSModel(X_train, X_test, y_train, y_test)
+    # ft_svm = svm.FTModel(X_train, X_test, y_train, y_test)
+    # jp_svm = svm.JPModel(X_train, X_test, y_train, y_test)
     print(f" SVM model accuracy for E-I: {accuracy_score(ei_svm[1], ei_svm[2]):.3f}")
     print(f" SVM model accuracy for N-S: {accuracy_score(ns_svm[1], ns_svm[2]):.3f}")
     print(f" SVM model accuracy for F-T: {accuracy_score(ft_svm[1], ft_svm[2]):.3f}")
