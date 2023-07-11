@@ -18,11 +18,11 @@ if __name__ == '__main__':
     svm = Models(SVC())
     nbm = Models(MultinomialNB())
     ada = Models(AdaBoostClassifier(n_estimators=50, random_state=42))
-    knn = Models(KNeighborsClassifier(n_neighbors=33))  # 82 neighbors gave the best results after checking 100 neighbors
+    knn = Models(KNeighborsClassifier(n_neighbors=33))  # 33 neighbors gave the best results after checking 100 neighbors
 
     dataset = DataSet()
     X_train, X_test, y_train, y_test, vectorizer = dataset.handle_data()
-    # Create your classification models and train them using the PCA-transformed data
+    # Create classification models and train using the PCA-transformed data
     pca = PCA(n_components=60)  # Specify the desired number of components
     X_pca_train = X_train.toarray()
     X_pca_test = X_test.toarray()
@@ -34,10 +34,16 @@ if __name__ == '__main__':
     ns_lrm = lrm.NSModel(X_train, X_test, y_train, y_test)
     ft_lrm = lrm.FTModel(X_train, X_test, y_train, y_test)
     jp_lrm = lrm.JPModel(X_train, X_test, y_train, y_test)
-    print(f" Logistic regression model accuracy for E-I: {accuracy_score(ei_lrm[1], ei_lrm[2]):.3f}")
-    print(f" Logistic regression model accuracy for N-S: {accuracy_score(ns_lrm[1], ns_lrm[2]):.3f}")
-    print(f" Logistic regression model accuracy for F-T: {accuracy_score(ft_lrm[1], ft_lrm[2]):.3f}")
-    print(f" Logistic regression model accuracy for J-P: {accuracy_score(jp_lrm[1], jp_lrm[2]):.3f}")
+    print(f" Logistic regression model test accuracy for E-I: {accuracy_score(ei_lrm[1], ei_lrm[2]):.3f}")
+    print(f" Logistic regression model test accuracy for N-S: {accuracy_score(ns_lrm[1], ns_lrm[2]):.3f}")
+    print(f" Logistic regression model test accuracy for F-T: {accuracy_score(ft_lrm[1], ft_lrm[2]):.3f}")
+    print(f" Logistic regression model test accuracy for J-P: {accuracy_score(jp_lrm[1], jp_lrm[2]):.3f}")
+
+    print(f" Logistic regression model train accuracy for E-I: {ei_lrm[-1]:.3f}")
+    print(f" Logistic regression model train accuracy for N-S: {ns_lrm[-1]:.3f}")
+    print(f" Logistic regression model train accuracy for F-T: {ft_lrm[-1]:.3f}")
+    print(f" Logistic regression model train accuracy for J-P: {jp_lrm[-1]:.3f}")
+
     end_lrm = time.time()
     print(f"Time for Logistic regression model:{end_lrm - start_lrm}")
 
@@ -46,10 +52,16 @@ if __name__ == '__main__':
     ns_rfm = rfm.NSModel(X_train, X_test, y_train, y_test)
     ft_rfm = rfm.FTModel(X_train, X_test, y_train, y_test)
     jp_rfm = rfm.JPModel(X_train, X_test, y_train, y_test)
-    print(f" Random Forest model accuracy for E-I: {accuracy_score(ei_rfm[1], ei_rfm[2]):.3f}")
-    print(f" Random Forest model accuracy for N-S: {accuracy_score(ns_rfm[1], ns_rfm[2]):.3f}")
-    print(f" Random Forest model accuracy for F-T: {accuracy_score(ft_rfm[1], ft_rfm[2]):.3f}")
-    print(f" Random Forest model accuracy for J-P: {accuracy_score(jp_rfm[1], jp_rfm[2]):.3f}")
+    print(f" Random Forest model test accuracy for E-I: {accuracy_score(ei_rfm[1], ei_rfm[2]):.3f}")
+    print(f" Random Forest model test accuracy for N-S: {accuracy_score(ns_rfm[1], ns_rfm[2]):.3f}")
+    print(f" Random Forest model test accuracy for F-T: {accuracy_score(ft_rfm[1], ft_rfm[2]):.3f}")
+    print(f" Random Forest model test accuracy for J-P: {accuracy_score(jp_rfm[1], jp_rfm[2]):.3f}")
+
+    print(f" Random Forest model train accuracy for E-I: {ei_lrm[-1]:.3f}")
+    print(f" Random Forest model train accuracy for N-S: {ns_lrm[-1]:.3f}")
+    print(f" Random Forest model train accuracy for F-T: {ft_lrm[-1]:.3f}")
+    print(f" Random Forest model train accuracy for J-P: {jp_lrm[-1]:.3f}")
+
     end_rfm = time.time()
     print(f"Time for Random Forest model:{end_rfm - start_rfm}")
 
@@ -58,10 +70,15 @@ if __name__ == '__main__':
     ns_svm = svm.NSModel(X_train_pca, X_test_pca, y_train, y_test)
     ft_svm = svm.FTModel(X_train_pca, X_test_pca, y_train, y_test)
     jp_svm = svm.JPModel(X_train_pca, X_test_pca, y_train, y_test)
-    print(f" SVM model accuracy for E-I: {accuracy_score(ei_svm[1], ei_svm[2]):.3f}")
-    print(f" SVM model accuracy for N-S: {accuracy_score(ns_svm[1], ns_svm[2]):.3f}")
-    print(f" SVM model accuracy for F-T: {accuracy_score(ft_svm[1], ft_svm[2]):.3f}")
-    print(f" SVM model accuracy for J-P: {accuracy_score(jp_svm[1], jp_svm[2]):.3f}")
+    print(f" SVM model test accuracy for E-I: {accuracy_score(ei_svm[1], ei_svm[2]):.3f}")
+    print(f" SVM model test accuracy for N-S: {accuracy_score(ns_svm[1], ns_svm[2]):.3f}")
+    print(f" SVM model test accuracy for F-T: {accuracy_score(ft_svm[1], ft_svm[2]):.3f}")
+    print(f" SVM model test accuracy for J-P: {accuracy_score(jp_svm[1], jp_svm[2]):.3f}")
+
+    print(f" SVM model train accuracy for E-I: {ei_lrm[-1]:.3f}")
+    print(f" SVM model train accuracy for N-S: {ns_lrm[-1]:.3f}")
+    print(f" SVM model train accuracy for F-T: {ft_lrm[-1]:.3f}")
+    print(f" SVM model train accuracy for J-P: {jp_lrm[-1]:.3f}")
     end_svm = time.time()
     print(f"Time for SVM model:{end_svm - start_svm}")
 
@@ -70,10 +87,15 @@ if __name__ == '__main__':
     ns_nbm = nbm.NSModel(X_train, X_test, y_train, y_test)
     ft_nbm = nbm.FTModel(X_train, X_test, y_train, y_test)
     jp_nbm = nbm.JPModel(X_train, X_test, y_train, y_test)
-    print(f" Naive Bayes model accuracy for E-I: {accuracy_score(ei_nbm[1], ei_nbm[2]):.3f}")
-    print(f" Naive Bayes model accuracy for N-S: {accuracy_score(ns_nbm[1], ns_nbm[2]):.3f}")
-    print(f" Naive Bayes model accuracy for F-T: {accuracy_score(ft_nbm[1], ft_nbm[2]):.3f}")
-    print(f" Naive Bayes model accuracy for J-P: {accuracy_score(jp_nbm[1], jp_nbm[2]):.3f}")
+    print(f" Naive Bayes model test accuracy for E-I: {accuracy_score(ei_nbm[1], ei_nbm[2]):.3f}")
+    print(f" Naive Bayes model test accuracy for N-S: {accuracy_score(ns_nbm[1], ns_nbm[2]):.3f}")
+    print(f" Naive Bayes model test accuracy for F-T: {accuracy_score(ft_nbm[1], ft_nbm[2]):.3f}")
+    print(f" Naive Bayes model test accuracy for J-P: {accuracy_score(jp_nbm[1], jp_nbm[2]):.3f}")
+
+    print(f" Naive Bayes model train accuracy for E-I: {ei_lrm[-1]:.3f}")
+    print(f" Naive Bayes model train accuracy for N-S: {ns_lrm[-1]:.3f}")
+    print(f" Naive Bayes model train accuracy for F-T: {ft_lrm[-1]:.3f}")
+    print(f" Naive Bayes model train accuracy for J-P: {jp_lrm[-1]:.3f}")
     end_nbm = time.time()
     print(f"Time for Naive Bayes model:{end_nbm - start_nbm}")
 
@@ -82,10 +104,15 @@ if __name__ == '__main__':
     ns_ada = ada.NSModel(X_train, X_test, y_train, y_test)
     ft_ada = ada.FTModel(X_train, X_test, y_train, y_test)
     jp_ada = ada.JPModel(X_train, X_test, y_train, y_test)
-    print(f" AdaBoost model accuracy for E-I: {accuracy_score(ei_ada[1], ei_ada[2]):.3f}")
-    print(f" AdaBoost model accuracy for N-S: {accuracy_score(ns_ada[1], ns_ada[2]):.3f}")
-    print(f" AdaBoost model accuracy for F-T: {accuracy_score(ft_ada[1], ft_ada[2]):.3f}")
-    print(f" AdaBoost model accuracy for J-P: {accuracy_score(jp_ada[1], jp_ada[2]):.3f}")
+    print(f" AdaBoost model test accuracy for E-I: {accuracy_score(ei_ada[1], ei_ada[2]):.3f}")
+    print(f" AdaBoost model test accuracy for N-S: {accuracy_score(ns_ada[1], ns_ada[2]):.3f}")
+    print(f" AdaBoost model test accuracy for F-T: {accuracy_score(ft_ada[1], ft_ada[2]):.3f}")
+    print(f" AdaBoost model test accuracy for J-P: {accuracy_score(jp_ada[1], jp_ada[2]):.3f}")
+
+    print(f" AdaBoost model train accuracy for E-I: {ei_lrm[-1]:.3f}")
+    print(f" AdaBoost model train accuracy for N-S: {ns_lrm[-1]:.3f}")
+    print(f" AdaBoost model train accuracy for F-T: {ft_lrm[-1]:.3f}")
+    print(f" AdaBoost model train accuracy for J-P: {jp_lrm[-1]:.3f}")
     end_ada = time.time()
     print(f"Time for AdaBoost model:{end_ada - start_ada}")
 
@@ -96,10 +123,15 @@ if __name__ == '__main__':
     ns_knn = knn.NSModel(X_train_knn, X_test_knn, y_train, y_test)
     ft_knn = knn.FTModel(X_train_knn, X_test_knn, y_train, y_test)
     jp_knn = knn.JPModel(X_train_knn, X_test_knn, y_train, y_test)
-    print(f" KNeighbors model accuracy for E-I: {accuracy_score(ei_knn[1], ei_knn[2]):.3f}")
-    print(f" KNeighbors model accuracy for N-S: {accuracy_score(ns_knn[1], ns_knn[2]):.3f}")
-    print(f" KNeighbors model accuracy for F-T: {accuracy_score(ft_knn[1], ft_knn[2]):.3f}")
-    print(f" KNeighbors model accuracy for J-P: {accuracy_score(jp_knn[1], jp_knn[2]):.3f}")
+    print(f" KNeighbors model test accuracy for E-I: {accuracy_score(ei_knn[1], ei_knn[2]):.3f}")
+    print(f" KNeighbors model test accuracy for N-S: {accuracy_score(ns_knn[1], ns_knn[2]):.3f}")
+    print(f" KNeighbors model test accuracy for F-T: {accuracy_score(ft_knn[1], ft_knn[2]):.3f}")
+    print(f" KNeighbors model test accuracy for J-P: {accuracy_score(jp_knn[1], jp_knn[2]):.3f}")
+
+    print(f" KNeighbors model train accuracy for E-I: {ei_lrm[-1]:.3f}")
+    print(f" KNeighbors model train accuracy for N-S: {ns_lrm[-1]:.3f}")
+    print(f" KNeighbors model train accuracy for F-T: {ft_lrm[-1]:.3f}")
+    print(f" KNeighbors model train accuracy for J-P: {jp_lrm[-1]:.3f}")
     end_knn = time.time()
     print(f"Time for KNeighbors model:{end_knn - start_knn}")
 

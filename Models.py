@@ -10,10 +10,10 @@ class Models:
         # split the data for E-I
         y_EI_train = y_train['E0-I1']
         y_EI_test = y_test['E0-I1']
-        self.classifier.fit(X_train, y_EI_train)
-        y_EI_pred = self.classifier.predict(X_test)
-        print(f"Train Accuracy for EI - {accuracy_score(y_EI_train, self.classifier.predict(X_train))}")
-        return self.classifier, y_EI_test, y_EI_pred
+        self.classifier.fit(X_train, y_EI_train)  # fit the classifier
+        y_EI_pred = self.classifier.predict(X_test)  # get the prediction
+        # print(f"Train Accuracy for EI - {accuracy_score(y_EI_train, self.classifier.predict(X_train))}") # print the accuracies for the test
+        return self.classifier, y_EI_test, y_EI_pred, accuracy_score(y_EI_train, self.classifier.predict(X_train))
 
     def NSModel(self, X_train, X_test, y_train, y_test):
         # split the data for N-S
@@ -22,8 +22,8 @@ class Models:
 
         self.classifier.fit(X_train, y_NS_train)
         y_NS_pred = self.classifier.predict(X_test)
-        print(f"Train Accuracy for NS - {accuracy_score(y_NS_train, self.classifier.predict(X_train))}")
-        return self.classifier, y_NS_test, y_NS_pred
+        # print(f"Train Accuracy for NS - {accuracy_score(y_NS_train, self.classifier.predict(X_train))}")
+        return self.classifier, y_NS_test, y_NS_pred, accuracy_score(y_NS_train, self.classifier.predict(X_train))
 
     def FTModel(self, X_train, X_test, y_train, y_test):
         # split the data for F-T
@@ -32,8 +32,8 @@ class Models:
 
         self.classifier.fit(X_train, y_FT_train)
         y_FT_pred = self.classifier.predict(X_test)
-        print(f"Train Accuracy for FT - {accuracy_score(y_FT_train, self.classifier.predict(X_train))}")
-        return self.classifier, y_FT_test, y_FT_pred
+        # print(f"Train Accuracy for FT - {accuracy_score(y_FT_train, self.classifier.predict(X_train))}")
+        return self.classifier, y_FT_test, y_FT_pred, accuracy_score(y_FT_train, self.classifier.predict(X_train))
 
     def JPModel(self, X_train, X_test, y_train, y_test):
         # split the data for J-P
@@ -43,6 +43,6 @@ class Models:
         self.classifier.fit(X_train, y_JP_train)
 
         y_JP_pred = self.classifier.predict(X_test)
-        print(f"Train Accuracy for JP - {accuracy_score(y_JP_train, self.classifier.predict(X_train))}")
-
-        return self.classifier, y_JP_test, y_JP_pred
+        # print(f"Train Accuracy for JP - {accuracy_score(y_JP_train, self.classifier.predict(X_train))}")
+        accuracy_score(y_JP_train, self.classifier.predict(X_train))
+        return self.classifier, y_JP_test, y_JP_pred, accuracy_score(y_JP_train, self.classifier.predict(X_train))

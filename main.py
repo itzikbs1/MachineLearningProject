@@ -10,13 +10,7 @@ from Models import Models
 if __name__ == '__main__':
     dataset = DataSet()
     X_train, X_test, y_train, y_test, vectorizer = dataset.handle_data()
-    # lrm = Models(LogisticRegression(solver='lbfgs', random_state=1))
-    lrm = Models(SVC())
-    pca = PCA(n_components=100)  # Specify the desired number of components
-    X_train = X_train.toarray()
-    X_test = X_test.toarray()
-    X_train = pca.fit_transform(X_train)
-    X_test = pca.transform(X_test)
+    lrm = Models(LogisticRegression(solver='lbfgs', random_state=1))
 
     input_user = input("Please Enter text: ")
     replacements = [
@@ -30,7 +24,6 @@ if __name__ == '__main__':
 
     input_user_Vectorized = vectorizer.transform([input_user])
     input_user_Vectorized = input_user_Vectorized.toarray()
-    input_user_Vectorized = pca.transform(input_user_Vectorized)
 
     ei_lrm = lrm.EIModel(X_train, X_test, y_train, y_test)
     ei_prediction = ei_lrm[0].predict(input_user_Vectorized)

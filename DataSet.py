@@ -19,45 +19,44 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 class DataSet:
 
     def __init__(self):
-        self.mbti_df = pd.read_csv('mbti_1.csv')
+        self.data = pd.read_csv('mbti_1.csv')
 
     def handle_data(self):
-        self.mbti_df["posts"] = self.mbti_df["posts"].str.lower()
-        for i in range(len(self.mbti_df)):
-            post_temp = self.mbti_df._get_value(i, 'posts')
-            pattern = re.compile(
-                r'https?://[a-zA-Z0-9./-]*/[a-zA-Z0-9?=_.]*[_0-9.a-zA-Z/-]*')  # to match url links present in the post
+        self.data["posts"] = self.data["posts"].str.lower()
+        for i in range(len(self.data)):
+            post_temp = self.data._get_value(i, 'posts')
+            pattern = re.compile(r'https?://[a-zA-Z0-9./-]*/[a-zA-Z0-9?=_.]*[_0-9.a-zA-Z/-]*')  # to match url links
             post_temp = re.sub(pattern, ' ', post_temp)  # to replace that url link with space
-            self.mbti_df._set_value(i, 'posts', post_temp)
+            self.data._set_value(i, 'posts', post_temp)
 
-        for i in range(len(self.mbti_df)):
-            post_temp = self.mbti_df._get_value(i, 'posts')
+        for i in range(len(self.data)):
+            post_temp = self.data._get_value(i, 'posts')
             pattern = re.compile(r'[0-9]')  # to match numbers from 0 to 9
             post_temp = re.sub(pattern, ' ', post_temp)  # to replace them with space
             pattern = re.compile('\W+')  # to match non alphanumeric characters
             post_temp = re.sub(pattern, ' ', post_temp)  # to replace them with space
-            pattern = re.compile(r'[_+]')
+            pattern = re.compile(r'[_+]')   # to match _ and + characters
             post_temp = re.sub(pattern, ' ', post_temp)
-            self.mbti_df._set_value(i, 'posts', post_temp)
+            self.data._set_value(i, 'posts', post_temp)
 
-        for i in range(len(self.mbti_df)):
-            post_temp = self.mbti_df._get_value(i, 'posts')
+        for i in range(len(self.data)):
+            post_temp = self.data._get_value(i, 'posts')
             pattern = re.compile('\s+')  # to match multiple whitespaces
             post_temp = re.sub(pattern, ' ', post_temp)  # to replace them with single whitespace
-            self.mbti_df._set_value(i, 'posts', post_temp)
+            self.data._set_value(i, 'posts', post_temp)
 
         remove_words = stopwords.words("english")
-        for i in range(self.mbti_df.shape[0]):
-            post_temp = self.mbti_df._get_value(i, 'posts')
+        for i in range(self.data.shape[0]):
+            post_temp = self.data._get_value(i, 'posts')
             post_temp = " ".join([w for w in post_temp.split(' ') if w not in remove_words])  # to remove stopwords
-            self.mbti_df._set_value(i, 'posts', post_temp)
+            self.data._set_value(i, 'posts', post_temp)
 
-        for i in range(self.mbti_df.shape[0]):
-            post_temp = self.mbti_df._get_value(i, 'posts')
+        for i in range(self.data.shape[0]):
+            post_temp = self.data._get_value(i, 'posts')
             post_temp = " ".join([lemmatizer.lemmatize(w) for w in post_temp.split(' ')])  # to implement lemmetization. group together different forms of a word
-            self.mbti_df._set_value(i, 'posts', post_temp)
+            self.data._set_value(i, 'posts', post_temp)
 
-        copy = self.mbti_df[['type', 'posts']].copy()
+        copy = self.data[['type', 'posts']].copy()
 
         copy['E-I'] = copy['type'].str.extract('(.)[N,S]', 1)
         copy['N-S'] = copy['type'].str.extract('[E,I](.)[F,T]', 1)
@@ -78,7 +77,7 @@ class DataSet:
 
         # Split training and testing dataset
         X_train, X_test, y_train, y_test = train_test_split(X, Y, random_state=42) # X_train and X_test will be all the posts divided to
-        # train and test. y_all_train and y_all_test will be the target labels i.e the MBTI type letters divided to the train and test. 25% goes to test. 75% to train.
+        # train and test. y_train and y_test will be the target labels i.e the MBTI type letters divided to the train and test. 25% goes to test. 75% to train.
 
         # Define TFIDF verctorizer
         vectorizer = TfidfVectorizer(
